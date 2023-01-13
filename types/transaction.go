@@ -7,6 +7,45 @@ import (
 	"github.com/0xPolygon/polygon-edge/helper/keccak"
 )
 
+// Transaction types.
+const (
+	LegacyTxType = iota
+	AccessListTxType
+	DynamicFeeTxType
+)
+
+// Config are the configuration options for structured logger the EVM
+type LoggerConfig struct {
+	EnableMemory     bool // enable memory capture
+	DisableStack     bool // disable stack capture
+	DisableStorage   bool // disable storage capture
+	EnableReturnData bool // enable return data capture
+	Debug            bool // print output during capture end
+	Limit            int  // maximum length of output, but zero means unlimited
+}
+
+// TxData is the underlying data of a transaction.
+//
+// This is implemented by DynamicFeeTx, LegacyTx and AccessListTx.
+type TxData interface {
+	txType() byte // returns the type ID
+	copy() TxData // creates a deep copy and initializes all fields
+
+	chainID() *big.Int
+	accessList() AccessList
+	data() []byte
+	gas() uint64
+	gasPrice() *big.Int
+	gasTipCap() *big.Int
+	gasFeeCap() *big.Int
+	value() *big.Int
+	nonce() uint64
+	to() *Address
+
+	rawSignatureValues() (v, r, s *big.Int)
+	setSignatureValues(chainID, v, r, s *big.Int)
+}
+
 type Transaction struct {
 	Nonce    uint64
 	GasPrice *big.Int
@@ -22,6 +61,8 @@ type Transaction struct {
 
 	// Cache
 	size atomic.Value
+
+	LoggerConfig *LoggerConfig
 }
 
 // IsContractCreation checks if tx is contract creation
@@ -103,4 +144,17 @@ func (t *Transaction) ExceedsBlockGasLimit(blockGasLimit uint64) bool {
 
 func (t *Transaction) IsUnderpriced(priceLimit uint64) bool {
 	return t.GasPrice.Cmp(big.NewInt(0).SetUint64(priceLimit)) < 0
+}
+
+func (t *Transaction) SetLoggerConfig(config *LoggerConfig) {
+	t.LoggerConfig = config
+}
+
+// copyAddressPtr copies an address.
+func copyAddressPtr(a *Address) *Address {
+	if a == nil {
+		return nil
+	}
+	cpy := *a
+	return &cpy
 }

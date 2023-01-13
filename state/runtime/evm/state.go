@@ -216,13 +216,47 @@ func (c *state) resetReturnData() {
 // Run executes the virtual machine
 func (c *state) Run() ([]byte, error) {
 	var (
-		vmerr error
-
-		op OpCode
-		ok bool
+		vmerr       error
+		op          OpCode
+		ok          bool                                           // current opcode
+		mem         = runtime.NewMemoryII(c.memory, c.lastGasCost) // bound memory
+		stack       = runtime.NewStack()                           // local stack
+		callContext = &runtime.ScopeContext{
+			Memory:   mem,
+			Stack:    stack,
+			Contract: c.msg,
+		}
+		// For optimisation reason we're using uint64 as the program counter.
+		// It's theoretically possible to go above 2^64. The YP defines the PC
+		// to be uint256. Practically much less so feasible.
+		pc   = uint64(0) // program counter
+		cost uint64
+		// copies used by tracer
+		pcCopy  uint64 // needed for the deferred EVMLogger
+		gasCopy uint64 // for EVMLogger to log gas remaining before execution
+		logged  bool   // deferred EVMLogger should ignore already logged steps
+		// res     []byte // result of the opcode execution function
 	)
 
+	// get tracer from host
+	tracer := c.host.GetTracerConfig()
+	if tracer.Debug {
+		defer func() {
+			if vmerr != nil {
+				if !logged {
+					tracer.Tracer.CaptureState(pcCopy, int(op), gasCopy, cost, callContext, c.ret, c.msg.Depth, vmerr)
+				} else {
+					tracer.Tracer.CaptureFault(pcCopy, int(op), gasCopy, cost, callContext, c.msg.Depth, vmerr)
+				}
+			}
+		}()
+	}
+
 	for !c.stop {
+		if tracer.Debug {
+			logged, pc = false, uint64(c.ip)
+			pcCopy = pc
+		}
 		op, ok = c.CurrentOpCode()
 		gasCopy, ipCopy := c.gas, uint64(c.ip)
 
@@ -230,6 +264,7 @@ func (c *state) Run() ([]byte, error) {
 
 		if !ok {
 			c.Halt()
+			logged = true
 
 			break
 		}
@@ -258,8 +293,26 @@ func (c *state) Run() ([]byte, error) {
 			break
 		}
 
+		cost = inst.gas
+		// trace
+		if tracer.Debug {
+			tracer.Tracer.CaptureState(pc, int(op), gasCopy, cost, callContext, c.ret, c.msg.Depth, vmerr)
+			logged = true
+		}
+
 		// execute the instruction
 		inst.inst(c)
+
+		if tracer.Debug {
+			// update scopecontext
+			mem.UpdateMemory(c.memory, c.lastGasCost) // bound memory
+			stack.UpdateStack(c.stack, c.sp)          // local stack
+			callContext = &runtime.ScopeContext{
+				Memory:   mem,
+				Stack:    stack,
+				Contract: c.msg,
+			}
+		}
 
 		c.captureSuccessfulExecution(op.String(), ipCopy, gasCopy, gasCopy-c.gas)
 
