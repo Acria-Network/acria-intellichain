@@ -1,22 +1,17 @@
-
-![Banner](.github/banner.jpg)
-[![codecov](https://codecov.io/gh/0xPolygon/polygon-edge/branch/develop/graph/badge.svg?token=PXEADRC1IW)](https://codecov.io/gh/0xPolygon/polygon-edge)
-## Polygon Edge
+## Acria IntelliChain
 
 Polygon Edge is a modular and extensible framework for building Ethereum-compatible blockchain networks.
 
-To find out more about Polygon, visit the [official website](https://polygon.technology/).
-
-WARNING: This is a work in progress so architectural changes may happen in the future. The code has not been audited yet, so please contact [Polygon Edge team](mailto:edge@polygon.technology) if you would like to use it in production.
+To find out more about Acria.AI, visit the [official website](https://acria.ai/).
 
 ## Documentation 📝
 
-If you'd like to learn more about the Polygon Edge, how it works and how you can use it for your project,
-please check out the **[Polygon Edge Documentation](https://docs.polygon.technology/docs/edge/overview/)**.
+If you'd like to learn more about the IntelliChain, how it works and how you can use it for your project,
+please check out the **[Acria IntelliChain Documentation](https://docs.acria.ai/)**.
 
 ---
 
-Copyright 2022 Polygon Technology
+Copyright 2023 Acria UG (haftungsbeschänkt)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
