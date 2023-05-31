@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[155],{3379:e=>{e.exports=JSON.parse('{"title":"Operate a node","slug":"/category/operate-a-node","permalink":"/docs/category/operate-a-node","navigation":{"previous":{"title":"Welcome to the IntelliChain","permalink":"/docs/intro"},"next":{"title":"Installation","permalink":"/docs/node/installation"}}}')}}]);

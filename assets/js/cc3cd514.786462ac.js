@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[636],{9931:i=>{i.exports=JSON.parse('{"title":"Staking","slug":"/category/staking","permalink":"/docs/category/staking","navigation":{"previous":{"title":"Validator Hosting","permalink":"/docs/node/validator-hosting"},"next":{"title":"Validator Staking","permalink":"/docs/staking/validator-staking"}}}')}}]);
