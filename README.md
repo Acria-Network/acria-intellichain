@@ -1,6 +1,6 @@
 ## Acria IntelliChain
 
-Polygon Edge is a modular and extensible framework for building Ethereum-compatible blockchain networks.
+The Acria IntelliChain is based on Polygon Edge, which is a modular and extensible framework for building Ethereum-compatible blockchain networks.
 
 To find out more about Acria.AI, visit the [official website](https://acria.ai/).
 
@@ -11,7 +11,7 @@ please check out the **[Acria IntelliChain Documentation](https://docs.acria.ai/
 
 ---
 
-Copyright 2023 Acria UG (haftungsbeschänkt)
+Copyright 2024 Acria UG (haftungsbeschänkt)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
