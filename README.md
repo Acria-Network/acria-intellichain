@@ -11,7 +11,7 @@ please check out the **[Acria IntelliChain Documentation](https://docs.acria.ai/
 
 ---
 
-Copyright 2024 Acria UG (haftungsbeschänkt)
+Copyright 2024 Acria UG (haftungsbeschränkt)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
